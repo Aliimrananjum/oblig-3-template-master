@@ -1,10 +1,7 @@
 package no.oslomet.cs.algdat.Oblig3;
 
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.*;
 
 public class SBinTre<T> {
     private static final class Node<T>   // en indre nodeklasse
@@ -122,16 +119,16 @@ public class SBinTre<T> {
     }
 
     public int antall(T verdi) {
-        int finnes = 0;
+        int finnes = 0; // lager en ny variabel for hver gang verdien finnes
         if (verdi == null) return 0;
 
         Node<T> p = rot;
 
         while (p != null) {
-            if(verdi == p.verdi) finnes ++;
+            if(verdi == p.verdi) finnes ++; // når verdien blir funnet legges det til på finnes
             int cmp = comp.compare(verdi, p.verdi);
             if (cmp < 0) p = p.venstre;
-            else if (cmp >= 0) p = p.høyre;
+            else if (cmp >= 0) p = p.høyre; //sørger for at pekeren flyttes slik at vi kan fortsette å søke. Har brukt eksempel fra Andre sin forelesningsvideo AlgDat2020 Uke 10 binære søketrær og binærsøk
         }
 
         return finnes;
@@ -143,11 +140,50 @@ public class SBinTre<T> {
     }
 
     private static <T> Node<T> førstePostorden(Node<T> p) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+        //kopiert kildekode fra kompendiet Programkode 5.1.7 h)
+        while (true)
+        {
+            if (p.venstre != null) p = p.venstre;
+            else if (p.høyre != null) p = p.høyre;
+            else return p;
+        }
+
+        //throw new UnsupportedOperationException("Ikke kodet ennå!");
+
     }
 
     private static <T> Node<T> nestePostorden(Node<T> p) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+        /*
+
+        I kompendiet står det regler for hvordan man finner den neste.
+        Postorden:
+
+Hvis p ikke har en forelder ( p er rotnoden), så er p den siste i postorden.
+Hvis p er høyre barn til sin forelder f, er forelderen f den neste.
+Hvis p er venstre barn til sin forelder f, gjelder:
+Hvis p er enebarn (f.høyre er null), er forelderen f den neste.
+Hvis p ikke er enebarn (dvs. f.høyre er ikke null), så er den neste den noden som kommer først i postorden i subtreet med f.høyre som rot.
+         */
+
+        //Peker mot null. Skal flytte den til riktig node basert på innholdet i treet.
+        Node<T> nesteNode = null;
+
+        //Hvis node sin foreldre ikke eksisterer, kun den noden som er i treet.
+        if(p.forelder == null){
+            return nesteNode; //returnerer null som oppgaven tilsier
+        }
+        else if(p.forelder.høyre ==null) { // egentlig rett fram her
+            nesteNode = p.forelder;
+            return nesteNode;
+        }
+        else{
+            nesteNode = p.forelder.høyre;
+            return nesteNode;
+        }
+
+        //throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
 
     public void postorden(Oppgave<? super T> oppgave) {
