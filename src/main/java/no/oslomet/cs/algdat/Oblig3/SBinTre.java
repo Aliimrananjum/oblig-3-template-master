@@ -122,18 +122,19 @@ public class SBinTre<T> {
     }
 
     public int antall(T verdi) {
+        int finnes = 0;
         if (verdi == null) return 0;
 
         Node<T> p = rot;
 
         while (p != null) {
+            if(verdi == p.verdi) finnes ++;
             int cmp = comp.compare(verdi, p.verdi);
             if (cmp < 0) p = p.venstre;
-            else if (cmp > 0) p = p.høyre;
-            else antall ++;
+            else if (cmp >= 0) p = p.høyre;
         }
 
-        return antall;
+        return finnes;
         // throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
 
@@ -178,6 +179,9 @@ public class SBinTre<T> {
         System.out.println(tre.antall(4)); // Utskrift: 3
         System.out.println(tre.antall(7)); // Utskrift: 2
         System.out.println(tre.antall(10)); // Utskrift: 1
+
+
+
 
 
     }
