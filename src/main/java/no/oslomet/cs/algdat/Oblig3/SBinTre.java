@@ -230,7 +230,17 @@ Hvis p ikke er enebarn (dvs. f.høyre er ikke null), så er den neste den noden 
     }
 
     private void postordenRecursive(Node<T> p, Oppgave<? super T> oppgave) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+        if(p == null){ //basistilfelle
+            return;
+        }
+
+        //bruker kildekode fra forelesning i Algdat.
+        postordenRecursive(p.venstre,oppgave);
+        postordenRecursive(p.høyre,oppgave);
+        oppgave.utførOppgave(p.verdi);
+
+        //throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
 
     public ArrayList<T> serialize() {
