@@ -111,7 +111,49 @@ public class SBinTre<T> {
     }
 
     public boolean fjern(T verdi) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+        if(inneholder(verdi)){
+            if (verdi == null) return false;  // treet har ingen nullverdier
+
+            Node<T> p = rot, q = null;   // q skal være forelder til p
+
+            while (p != null)            // leter etter verdi
+            {
+                int cmp = comp.compare(verdi,p.verdi);      // sammenligner
+                if (cmp < 0) { q = p; p = p.venstre; }      // går til venstre
+                else if (cmp > 0) { q = p; p = p.høyre; }   // går til høyre
+                else break;    // den søkte verdien ligger i p
+            }
+            if (p == null) return false;   // finner ikke verdi
+
+            if (p.venstre == null || p.høyre == null)  // Tilfelle 1) og 2)
+            {
+                Node<T> b = p.venstre != null ? p.venstre : p.høyre;  // b for barn
+                if (p == rot) rot = b;
+                else if (p == q.venstre) q.venstre = b;
+                else q.høyre = b;
+            }
+            else  // Tilfelle 3)
+            {
+                Node<T> s = p, r = p.høyre;   // finner neste i inorden
+                while (r.venstre != null)
+                {
+                    s = r;    // s er forelder til r
+                    r = r.venstre;
+                }
+
+                p.verdi = r.verdi;   // kopierer verdien i r til p
+
+                if (s != p) s.venstre = r.høyre;
+                else s.høyre = r.høyre;
+            }
+
+            antall--;   // det er nå én node mindre i treet
+            return true;
+        }
+
+        else return false;
+        //throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
 
     public int fjernAlle(T verdi) {
@@ -167,43 +209,22 @@ Hvis p er enebarn (f.høyre er null), er forelderen f den neste.
 Hvis p ikke er enebarn (dvs. f.høyre er ikke null), så er den neste den noden som kommer først i postorden i subtreet med f.høyre som rot.
          */
 
-        //har prøvd å lage forskjellige pekere.
-        Node<T> node = p;
-        Node<T> peker = null;
-        Node<T> foreldre = null;
+        Node<T> foreldre = p.forelder;
 
-        if(node.forelder == null){ //sjekker om den har foreldre eller ikke.
+        if(foreldre == null){
             return null;
         }
-        else{
-            foreldre = node.forelder; //setter pekere.
-            peker = p;
-        }
 
-        if(foreldre.høyre != p){ //sjekker om vi nylig har gått gjennom denne noden fra før
-            if(foreldre.høyre !=null){ // sjekker om vi skal travesere i et nytt subtre
-                if(foreldre.høyre.venstre != null){ //bruker kildekode fra første postorden
-                    peker = foreldre.høyre;
-                    while (true)
-                    {
-                        if (peker.venstre != null) peker = peker.venstre;
-                        else if (peker.høyre != null) peker = peker.høyre;
-                        else return peker;
-                    }
-                }
-                else {//her er det bare å returnere riktig node. Følger oppskrift fra kompendiet.
-                    return foreldre.høyre;
-                }
-
-            }
-            else{
-                return foreldre;
-            }
-        }
-        else{
+        if(p == foreldre.høyre){
             return foreldre;
         }
 
+        if(p == foreldre.venstre){
+            if(foreldre.høyre == null){
+                return foreldre;
+            }
+        }
+        return førstePostorden(foreldre.høyre);
 
         //throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
