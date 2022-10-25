@@ -210,8 +210,19 @@ Hvis p ikke er enebarn (dvs. f.høyre er ikke null), så er den neste den noden 
 
     public void postorden(Oppgave<? super T> oppgave) {
 
+        Node<T> p = førstePostorden(rot); //tilordner første postorden
+        oppgave.utførOppgave(p.verdi); //skriver ut
+        while(true){ //går i while løkke helt til neste postorden node er null.
+            p = nestePostorden(p);
+            if(p == null)break;
+            oppgave.utførOppgave(p.verdi);
 
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        }
+
+
+
+
+        //throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
 
     public void postordenRecursive(Oppgave<? super T> oppgave) {
