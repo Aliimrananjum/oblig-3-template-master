@@ -167,26 +167,50 @@ Hvis p er enebarn (f.høyre er null), er forelderen f den neste.
 Hvis p ikke er enebarn (dvs. f.høyre er ikke null), så er den neste den noden som kommer først i postorden i subtreet med f.høyre som rot.
          */
 
-        //Peker mot null. Skal flytte den til riktig node basert på innholdet i treet.
-        Node<T> nesteNode = null;
+        //har prøvd å lage forskjellige pekere.
+        Node<T> node = p;
+        Node<T> peker = null;
+        Node<T> foreldre = null;
 
-        //Hvis node sin foreldre ikke eksisterer, kun den noden som er i treet.
-        if(p.forelder == null){
-            return nesteNode; //returnerer null som oppgaven tilsier
-        }
-        else if(p.forelder.høyre ==null) { // egentlig rett fram her
-            nesteNode = p.forelder;
-            return nesteNode;
+        if(node.forelder == null){ //sjekker om den har foreldre eller ikke.
+            return null;
         }
         else{
-            nesteNode = p.forelder.høyre;
-            return nesteNode;
+            foreldre = node.forelder; //setter pekere.
+            peker = p;
         }
+
+        if(foreldre.høyre != p){ //sjekker om vi nylig har gått gjennom denne noden fra før
+            if(foreldre.høyre !=null){ // sjekker om vi skal travesere i et nytt subtre
+                if(foreldre.høyre.venstre != null){ //bruker kildekode fra første postorden
+                    peker = foreldre.høyre;
+                    while (true)
+                    {
+                        if (peker.venstre != null) peker = peker.venstre;
+                        else if (peker.høyre != null) peker = peker.høyre;
+                        else return peker;
+                    }
+                }
+                else {//her er det bare å returnere riktig node. Følger oppskrift fra kompendiet.
+                    return foreldre.høyre;
+                }
+
+            }
+            else{
+                return foreldre;
+            }
+        }
+        else{
+            return foreldre;
+        }
+
 
         //throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
 
     public void postorden(Oppgave<? super T> oppgave) {
+
+
         throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
 
