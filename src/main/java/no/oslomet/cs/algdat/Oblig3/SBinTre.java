@@ -129,8 +129,20 @@ public class SBinTre<T> {
             if (p.venstre == null || p.høyre == null)  // Tilfelle 1) og 2)
             {
                 Node<T> b = p.venstre != null ? p.venstre : p.høyre;  // b for barn
-                if (p == rot) rot = b;
-                else if (p == foreldre.venstre) foreldre.venstre = b;
+                if (p == rot) {
+                    rot = b; //egen kode
+                    if(b!=null){
+                        b.forelder = null; //egen kode
+                    }
+
+                }
+                else if (p == foreldre.venstre){
+                    foreldre.venstre = b;
+                    if(b !=null) {
+                        b.forelder = foreldre;// min kode
+                    }
+
+                }
                 else {
                     foreldre.høyre = b;
                     if(b !=null){
@@ -162,7 +174,15 @@ public class SBinTre<T> {
     }
 
     public int fjernAlle(T verdi) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+        int fjernet = 0;
+
+        while(inneholder(verdi)){ // mens verdien vi vil fjerne innholder ta fjerner vi den.
+            fjern(verdi);
+            fjernet++; // legger til per fjerning.
+        }
+        return fjernet; // returnerer anall fjernet
+       // throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
 
     public int antall(T verdi) {
@@ -183,7 +203,26 @@ public class SBinTre<T> {
     }
 
     public void nullstill() {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+
+        //Travarserer med Postorden. Metoden finner første Postorden. kopiert kildekode fra
+        //kompendiet Programkode 5.1.7 h) Derifra bruker jeg fjern metoden.
+        //
+        Node<T> p = rot; // Lager peker som starter på root
+
+        while (!tom())
+        {
+            if(p!=rot){
+                if (p.venstre != null) p = p.venstre;
+                else if (p.høyre != null) p = p.høyre;
+                fjern(p.verdi); //
+            }
+            else{
+                fjern(rot.verdi);
+            }
+
+        }
+        //throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
 
     private static <T> Node<T> førstePostorden(Node<T> p) {
@@ -270,7 +309,37 @@ Hvis p ikke er enebarn (dvs. f.høyre er ikke null), så er den neste den noden 
     }
 
     public ArrayList<T> serialize() {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+        ArrayList<T> nodeList = new ArrayList<T>();
+
+        ArrayDeque<Node> queue = new ArrayDeque<Node>();
+
+        //leggger til root-noden
+        queue.addFirst(rot);
+
+        while(!queue.isEmpty()){
+            //ta ut første fra køen
+            Node<T> current = queue.removeFirst();
+
+            //legg til current sine to barn køen
+            if(current.venstre != null){
+                queue.addLast(current.venstre);
+            }
+
+            if(current.høyre != null){
+                queue.addLast(current.høyre);
+            }
+
+            //skriv ut
+
+            nodeList.add(current.verdi);
+
+        }
+
+
+
+        return nodeList;
+        //throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
 
     static <K> SBinTre<K> deserialize(ArrayList<K> data, Comparator<? super K> c) {
