@@ -310,9 +310,9 @@ Hvis p ikke er enebarn (dvs. f.høyre er ikke null), så er den neste den noden 
 
     public ArrayList<T> serialize() {
 
-        ArrayList<T> nodeList = new ArrayList<T>();
+        ArrayList<T> nodeList = new ArrayList<T>(); // lager en array.
 
-        ArrayDeque<Node> queue = new ArrayDeque<Node>();
+        ArrayDeque<Node> queue = new ArrayDeque<Node>(); //lager en Array med innbygde metoder.
 
         //leggger til root-noden
         queue.addFirst(rot);
@@ -332,7 +332,7 @@ Hvis p ikke er enebarn (dvs. f.høyre er ikke null), så er den neste den noden 
 
             //skriv ut
 
-            nodeList.add(current.verdi);
+            nodeList.add(current.verdi); // legger ut verdien i array
 
         }
 
@@ -343,7 +343,15 @@ Hvis p ikke er enebarn (dvs. f.høyre er ikke null), så er den neste den noden 
     }
 
     static <K> SBinTre<K> deserialize(ArrayList<K> data, Comparator<? super K> c) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+        SBinTre<K> tre = new SBinTre<>(c); // lager ny tomt tre
+        int i = 0;
+        for(; i < data.size(); i++){ //kaller på leggInn metoden.
+            tre.leggInn(data.get(i));
+        }
+
+        return tre; //returnerer tre.
+        //throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
 
     public static void main(String[] args) {
