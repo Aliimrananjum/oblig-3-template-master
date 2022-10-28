@@ -112,6 +112,8 @@ public class SBinTre<T> {
 
     public boolean fjern(T verdi) {
 
+        //kopiert kildekode fra kompendiet Programkode 5.2.8 d).
+
         if(inneholder(verdi)){
             if (verdi == null) return false;  // treet har ingen nullverdier
 
@@ -186,11 +188,12 @@ public class SBinTre<T> {
     }
 
     public int antall(T verdi) {
-        int finnes = 0; // lager en ny variabel for hver gang verdien finnes
+        int finnes = 0; // lager en ny variabel.
         if (verdi == null) return 0;
 
         Node<T> p = rot;
 
+        //hentet kildekode fra Programkode 5.2.6 a)
         while (p != null) {
             if(verdi == p.verdi) finnes ++; // når verdien blir funnet legges det til på finnes
             int cmp = comp.compare(verdi, p.verdi);
